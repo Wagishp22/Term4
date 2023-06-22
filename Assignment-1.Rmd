@@ -1,0 +1,288 @@
+---
+title: "Assignment-1"
+author:"Wagish Priyaranjann (2217004)"
+output: word_document
+date: '2023-06-16'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Assignment 1
+
+Common measures of textual complexity are derived from simple counts of words, sentences and syllables. In this homework, you'll implement two of them: type-token ratio (a measure of vocabulary richness) and the Flesch-Kincaid Grade Level.
+
+```{r cars}
+summary(cars)
+```
+Q1. Find two different speeches you'd like to compare by two differnt political leaders (from any source) . For potential sources, speeches by prime ministers of India see https://eparlib.nic.in/handle/123456789/800962 (you can ignore question answers). You may choose speech by other member of parliament fromt the same source. Ensure that both texts are a minimum of 500 words. Write R code to read these txt file.
+
+```{r , echo=TRUE}
+# Q1. write R code below
+#install.packages("qdapTools")
+library(qdapTools)
+#setwd('C:/Users/lenovo/Documents/Prep class/Directory_R_Files')
+shashi <- read_docx("Shashitharoor.docx")
+modi <- read_docx("Excellencies.docx")
+```
+
+Q2. Use atleast two differnt work tokenizaors to caculate type-token ratio.
+$$\begin{equation}
+TTR = {\textrm{number of distinct word types} \over \textrm{number of word tokens}}
+\end{equation}$$
+Calculate this measure for the first 500 words of your two documents and report the results here. Exclude tokens that are exclusively punctuation from all counts.
+```{r , echo=TRUE}
+# Q2. write R code below to implement TTR with two differnt tokenizors.
+#install.packages("tm")
+library(tm)
+#Find tokens using first 500 words. Used stackoverflow. Google search prompt - parse text to select first 500 words in R
+shashi500 <- head(unlist(strsplit(shashi, split = "\\s+")),500)
+shashi500 <- gsub(pattern = "\\W",replacement = "",x = shashi500)
+tokenShashi_Boost <- length(Boost_tokenizer(shashi500))
+tokenShashi_MC <- length(MC_tokenizer(shashi500))
+#Code to find types. Used chatgpt. Prompt- write R code to remove duplicate words from a string and print number of words in the string after the operation.
+removeDuplicates <- function(string) {
+  words <- unlist(strsplit(string, "\\s+"))  # Split the string into words
+  uniqueWords <- unique(words)  # Remove duplicates
+  cleanedString <- paste(uniqueWords, collapse = " ")  # Reconstruct the string
+  strsplit(cleanedString, "\\s+")[[1]]
+  unique_words <- unique(words)            # Remove duplicate words
+  num_words <- length(unique_words)
+  return(list(cleanedString = cleanedString, num_words = num_words))
+}
+result <- removeDuplicates(shashi500)
+typesShashi500 <- result$num_words
+TTR_BoostS <- typesShashi500/tokenShashi_Boost
+TTR_MCS <- typesShashi500/tokenShashi_MC
+#TTR
+
+
+
+modi500 <- head(unlist(strsplit(modi, split = "\\s+")),500)
+modi500 <- gsub(pattern = "\\W",replacement = "",x = modi500)
+tokenmodi_Boost=length(Boost_tokenizer(modi500))
+tokenmodi_MC <- length(MC_tokenizer(modi500))
+removeDuplicates <- function(string) {
+  words <- unlist(strsplit(string, "\\s+"))  # Split the string into words
+  uniqueWords <- unique(words)  # Remove duplicates
+  cleanedString <- paste(uniqueWords, collapse = " ")  # Reconstruct the string
+  strsplit(cleanedString, "\\s+")[[1]]
+  unique_words <- unique(words)            # Remove duplicate words
+  num_words <- length(unique_words)
+  return(list(cleanedString = cleanedString, num_words = num_words))
+}
+result <- removeDuplicates(modi500)
+typesmodi500 <- result$num_words
+TTR_Boost <- typesmodi500/tokenmodi_Boost
+TTR_MC <- typesmodi500/tokenmodi_MC
+
+
+TTR = list(tokenShashi_Boost = tokenShashi_Boost, tokenShashi_MC = tokenShashi_MC, typesShashi500 = typesShashi500, TTR_Shashi_Boost = TTR_BoostS, TTR_Shashi_MC = TTR_MCS, tokenmodi_Boost = tokenmodi_Boost, tokenmodi_MC = tokenmodi_MC, typesmodi500 = typesmodi500, TTR_Modi_Boost = TTR_Boost, TTR_Modi_MC = TTR_MC)
+print(TTR)
+```
+
+Q3. TTR is dependent on text length (intuitively, the longer a text is, the greater chance you have of a word type repeating), so this number is only comparable between documents of identical lengths. Plot TTR for different number of words, do you think that TTR converges with number of words.
+```{r , echo=TRUE}
+# Q3. write R code below to plot TTR with number of words.
+library(tm)
+#Find tokens using first 500 words. Used stackoverflow. Google search prompt - parse text to select first 500 words in R
+shashi100 <- head(unlist(strsplit(shashi, split = "\\s+")),100)
+shashi200 <- head(unlist(strsplit(shashi, split = "\\s+")),200)
+shashi300 <- head(unlist(strsplit(shashi, split = "\\s+")),300)
+shashi500 <- head(unlist(strsplit(shashi, split = "\\s+")),500)
+shashi800 <- head(unlist(strsplit(shashi, split = "\\s+")),800)
+shashi1200 <- head(unlist(strsplit(shashi, split = "\\s+")),1200)
+shashi1800 <- head(unlist(strsplit(shashi, split = "\\s+")),1800)
+shashi2200 <- head(unlist(strsplit(shashi, split = "\\s+")),2200)
+shashi100 <- gsub(pattern = "\\W",replacement = "",x = shashi100)
+shashi200 <- gsub(pattern = "\\W",replacement = "",x = shashi200)
+shashi300 <- gsub(pattern = "\\W",replacement = "",x = shashi300)
+shashi500 <- gsub(pattern = "\\W",replacement = "",x = shashi500)
+shashi800 <- gsub(pattern = "\\W",replacement = "",x = shashi800)
+shashi1200 <- gsub(pattern = "\\W",replacement = "",x = shashi1200)
+shashi1800 <- gsub(pattern = "\\W",replacement = "",x = shashi1800)
+shashi2200 <- gsub(pattern = "\\W",replacement = "",x = shashi2200)
+tokenShashi_100 <- length(Boost_tokenizer(shashi100))
+tokenShashi_200 <- length(Boost_tokenizer(shashi200))
+tokenShashi_300 <- length(Boost_tokenizer(shashi300))
+tokenShashi_500 <- length(Boost_tokenizer(shashi500))
+tokenShashi_800 <- length(Boost_tokenizer(shashi800))
+tokenShashi_1200 <- length(Boost_tokenizer(shashi1200))
+tokenShashi_1800 <- length(Boost_tokenizer(shashi1800))
+tokenShashi_2200 <- length(Boost_tokenizer(shashi2200))
+
+removeDuplicate <- function(string) {
+  words <- unlist(strsplit(string, "\\s+"))  # Split the string into words
+  uniqueWords <- unique(words)  # Remove duplicates
+  cleanedString <- paste(uniqueWords, collapse = " ")  # Reconstruct the string
+  strsplit(cleanedString, "\\s+")[[1]]
+  unique_words <- unique(words)            # Remove duplicate words
+  num_words <- length(unique_words)
+  return(list(cleanedString = cleanedString, num_words = num_words))
+}
+result <- removeDuplicate(shashi100)
+typesShashi100 <- result$num_words
+result <- removeDuplicate(shashi200)
+typesShashi200 <- result$num_words
+result <- removeDuplicate(shashi300)
+typesShashi300 <- result$num_words
+result <- removeDuplicate(shashi500)
+typesShashi500 <- result$num_words
+result <- removeDuplicate(shashi800)
+typesShashi800 <- result$num_words
+result <- removeDuplicate(shashi1200)
+typesShashi1200 <- result$num_words
+result <- removeDuplicate(shashi1800)
+typesShashi1800 <- result$num_words
+result <- removeDuplicate(shashi2200)
+typesShashi2200 <- result$num_words
+
+TTR_100 <- typesShashi100/tokenShashi_100
+TTR_200 <- typesShashi200/tokenShashi_200
+TTR_300 <- typesShashi300/tokenShashi_300
+TTR_500 <- typesShashi500/tokenShashi_500
+TTR_800 <- typesShashi800/tokenShashi_800
+TTR_1200 <- typesShashi1200/tokenShashi_1200
+TTR_1800 <- typesShashi1800/tokenShashi_1800
+TTR_2200 <- typesShashi2200/tokenShashi_2200
+
+# Create a data frame with TTR values
+data <- data.frame(TTR = c(TTR_100, TTR_200, TTR_300, TTR_500, TTR_800, TTR_1200, TTR_1800, TTR_2200),
+                   Group = factor(rep(c("100", "200", "300", "500", "800", "1200", "1800", "2200"), each = length(TTR_100)), levels = c("100", "200", "300", "500", "800", "1200", "1800", "2200")))
+
+# Plot a histogram
+ggplot() +
+  geom_col(data = data, aes(x = Group, y = TTR, fill = Group), position = "dodge", alpha = 0.7) +
+  geom_line(data = data, aes(x = Group, y = TTR, group = 1), size = 1, color = "black") +
+  labs(title = "Type-Token Ratio (TTR) Distribution",
+       x = "No. of Words",
+       y = "TTR") +
+  scale_fill_discrete(name = "No. of Words") +
+  theme_minimal()
+
+```
+
+Q4. Now we will implemnt the Flesch-Kincaid Grade Level, which has the following formula:
+$$\begin{equation}
+0.39 \left ( \frac{\mbox{total words}}{\mbox{total sentences}} \right ) + 11.8 \left ( \frac{\mbox{total syllables}}{\mbox{total words}} \right ) - 15.59
+\end{equation}$$
+```{r , echo=TRUE}
+# Q4. write R code below to implement Flesch-Kincaid Grade Level. You have to count total sentences, total words and total syllables for calcualting the score.
+#install.packages("koRpus")
+install.packages("corpus")
+library(qdapTools)
+library(openNLP)
+library(tokenizers)
+# Count total sentences
+shashi <- read_docx("Shashitharoor.docx")
+shashi
+#Used stackoverflow. Google prompt - Split string into sentences in R
+sent_tokens <- unlist(strsplit(shashi, "(?<=[[:punct:]])\\s(?=[A-Z])", perl=T))
+total_sentences <- length(sent_tokens)# Count total words
+words <- unlist(strsplit(shashi, "\\s+"))
+total_words <- length(words)
+
+# Count total syllables
+total_syllables <- sapply(gregexpr("[aeiouy]+", shashi, ignore.case=TRUE), length)
+# Calculate Flesch-Kincaid Grade Level score
+score <- 0.39 * (total_words / total_sentences) + 11.8 * (total_syllables / total_words) - 15.59
+cat("Flesch-Kincaid Grade Level - ", score)
+```
+
+Q5. Now find the sentiment of speech by every sentence and plot the sentiments for all the sentences for both the speches.
+```{r , echo=TRUE}
+# Q4. write R code below to implement sentiment analysis for all the sentences.
+# Install
+#install.packages("tm")
+#install.packages("SnowballC")
+#install.packages("wordcloud")
+#install.packages("RColorBrewer")
+#install.packages("syuzhet")
+library(tm)
+library(qdapTools)
+library("tm")
+library("SnowballC")
+library("wordcloud")
+library("RColorBrewer")
+library("syuzhet")
+library("qdapTools")
+library("tokenizers")
+library(ggplot2)
+
+# Load the data as a corpus
+shashi <- readLines(file.choose())
+# Split the text into sentences
+sentences <- unlist(strsplit(shashi, "(?<=\\.|\\?|\\!)\\s+", perl = TRUE))
+# Create a corpus from the sentences
+docs <- Corpus(VectorSource(sentences))
+# Preprocessing
+toSpace <- content_transformer(function(x, pattern) gsub(pattern, " ", x))
+docs <- tm_map(docs, toSpace, "/")
+docs <- tm_map(docs, toSpace, "@")
+docs <- tm_map(docs, toSpace, "\\|")
+docs <- tm_map(docs, toSpace, "\\\n")
+docs <- tm_map(docs, removeSpecialChars)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, removeWords, stopwords("english"))
+docs <- tm_map(docs, removeWords, c("blabla1", "blabla2")) 
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, stripWhitespace)
+# Remove empty documents
+docs <- docs[!(lengths(docs) == 0)]
+docs <- sapply(docs, as.character)
+# Sentiment Analysis
+require(syuzhet)
+#mysentiment<-as.data.frame(matrix(rep(NA,100),nrow = 10))
+for(i in 1:length(docs)){
+  aaa<-get_nrc_sentiment(docs[[i]])
+  mysentiment[i,1:10]<-as.numeric(aaa[1,])
+}
+colnames(mysentiment)<-colnames(aaa)
+sentiment <-ifelse(mysentiment$positive+mysentiment$negative==0,0,(mysentiment$positive-mysentiment$negative)/(mysentiment$positive+mysentiment$negative))
+
+
+# Load the data as a corpus
+modi <- readLines(file.choose())
+# Split the text into sentences
+sentences <- unlist(strsplit(modi, "(?<=\\.|\\?|\\!)\\s+", perl = TRUE))
+# Create a corpus from the sentences
+docs <- Corpus(VectorSource(sentences))
+# Preprocessing
+toSpace <- content_transformer(function(x, pattern) gsub(pattern, " ", x))
+docs <- tm_map(docs, toSpace, "/")
+docs <- tm_map(docs, toSpace, "@")
+docs <- tm_map(docs, toSpace, "\\|")
+docs <- tm_map(docs, toSpace, "\\\n")
+docs <- tm_map(docs, removeSpecialChars)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, removeWords, stopwords("english"))
+docs <- tm_map(docs, removeWords, c("blabla1", "blabla2")) 
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, stripWhitespace)
+# Remove empty documents
+docs <- docs[!(lengths(docs) == 0)]
+docs <- sapply(docs, as.character)
+# Sentiment Analysis
+require(syuzhet)
+#mysentiment<-as.data.frame(matrix(rep(NA,100),nrow = 10))
+for(i in 1:length(docs)){
+  aaa<-get_nrc_sentiment(docs[[i]])
+  mysentiment[i,1:10]<-as.numeric(aaa[1,])
+}
+colnames(mysentiment)<-colnames(aaa)
+sentiment1 <-ifelse(mysentiment$positive+mysentiment$negative==0,0,(mysentiment$positive-mysentiment$negative)/(mysentiment$positive+mysentiment$negative))
+
+
+data <- data.frame(Sentence = 1:length(sentiment), Sentiment = sentiment, Sentiment1 = sentiment1)
+
+ggplot(data) +
+  geom_line(aes(Sentence, Sentiment, color = "Shashi Tharoor"), size = 1) +
+  geom_line(aes(Sentence, Sentiment1, color = "Narendra Modi"), size = 1) +
+  labs(title = "Sentiment Analysis", x = "Sentence", y = "Sentiment Score") +
+  scale_color_manual(values = c("Shashi Tharoor" = "blue", "Narendra Modi" = "red")) +
+  theme_minimal()
+
+
+```
