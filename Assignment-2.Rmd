@@ -1,0 +1,42 @@
+---
+title: "Assignment 2"
+author: "Name (Roll No.)"
+date: '2022-07-01'
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Assignment 2
+
+## Langauge Model
+
+Q1. Find five different speeches from your favorite political leaders (from any source). For potential sources, speeches by prime ministers of India see https://eparlib.nic.in/handle/123456789/800962 (you can ignore question answers). You may choose speech by other member of parliament from the same source. Ensure that all texts are a minimum of 500 words and are from same person. 
+a. Build 1-3gram model based on these speeches. Fine tune it for values of D1, D2 and D3 for mkn smoother. 
+b. Predict the most probable word after "India" from the vocabulary of the person.
+c. Select the best ngram model and produce 10 sentences from the model.
+
+Hint: largely follow ngram (where I used sherlock data) code.
+
+
+
+
+## Image processing
+
+Click a pic of you iimb identity card, read the image in R and extract as many information you can from the image (Name, Roll NO, DOB, Blood Group, your pic(optional)).
+
+
+```{r pressure, echo=FALSE}
+# add chunks from pan scan rcode
+```
+
+
+
+Select any image and read it in R. Play with differnt convolution matrix (create 3 different convolution matrix of size 5X5, explain the ouput.). Write one big matrix to flip the image (matrix could be as large as image size itself).
+
+
+```{r pressure, echo=FALSE}
+# add chunks from pan scan rcode
+```
+
